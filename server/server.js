@@ -8,7 +8,7 @@ const { globalLimiter, leadCreationLimiter } = require('./middleware/rateLimiter
 const { verifyToken, loginHandler } = require('./middleware/auth');
 const { sanitizeBody } = require('./middleware/sanitize');
 const { leadValidationRules, handleValidationErrors } = require('./middleware/validateLead');
-const { appendLead, getAllLeads } = require('./services/dbService');
+const { appendLead, getAllLeads, updateLead, deleteLead } = require('./services/dbService');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -130,6 +130,37 @@ app.post('/api/leads',
 
 // ────────────────────────────────────────────────
 // Layer 7 — Global Error Handler
+// ────────────────────────────────────────────────
+app.patch('/api/leads/:id', async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const updates = req.body;
+
+        const updatedLead = await updateLead(id, updates);
+        if (!updatedLead) {
+            return res.status(404).json({ success: false, message: 'Lead not found or no updates provided' });
+        }
+        res.json({ success: true, message: 'Lead updated', lead: updatedLead });
+    } catch (error) {
+        next(error);
+    }
+});
+
+app.delete('/api/leads/:id', async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const success = await deleteLead(id);
+        if (!success) {
+            return res.status(404).json({ success: false, message: 'Lead not found' });
+        }
+        res.json({ success: true, message: 'Lead deleted' });
+    } catch (error) {
+        next(error);
+    }
+});
+
+// ────────────────────────────────────────────────
+// Layer 8 — Global Error Handler
 // ────────────────────────────────────────────────
 app.use((err, req, res, _next) => {
     // CORS errors

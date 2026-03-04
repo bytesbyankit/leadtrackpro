@@ -26,7 +26,7 @@
     --color-brand-900: #312e81;
 
     --color-success-500: #10b981;
-    --color-error-500: #ef4444;
+    --color-error-500: #F04438;
     --color-warning-500: #f59e0b;
 
     --font-sans: "Inter", system-ui, -apple-system, sans-serif;
@@ -117,11 +117,11 @@
     }
 
     .input-field {
-        @apply w-full bg-surface-base border border-border-main rounded-lg px-3 py-2 text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all;
+        @apply w-full bg-surface-base border border-border-main rounded-[10px] px-3.5 py-3 h-[44px] text-sm text-text-main placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all;
     }
 
     .input-field-borderless {
-        @apply w-full bg-transparent border border-transparent rounded-lg px-3 py-2.5 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:bg-surface-base hover:border-border-main hover:bg-surface-base/50 transition-all;
+        @apply w-full bg-transparent border border-transparent rounded-[10px] px-3.5 py-3 h-[44px] text-sm text-text-main placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:bg-surface-base hover:border-border-main hover:bg-surface-base/50 transition-all;
     }
 
     .input-field-borderless.validation-error {
@@ -142,27 +142,52 @@
     }
 
     .section-header {
-        @apply text-[13px] font-bold text-text-main tracking-wide uppercase pl-3 border-l-[3px] border-brand-500;
+        @apply text-[13px] font-semibold text-text-main tracking-wide uppercase pl-3 border-l-[3px] border-brand-500;
     }
 
     .section-description {
-        @apply text-[11px] text-text-muted font-medium mt-0.5 pl-3;
+        @apply text-[11px] text-text-muted font-medium mt-2 pl-3;
     }
 
     .hint-text {
         @apply text-[10px] text-text-muted font-medium mt-1 leading-tight;
     }
 
+    .workflow-container {
+        @apply relative;
+    }
+
+    .workflow-line {
+        @apply absolute left-[11px] top-8 bottom-8 w-[2px] bg-border-main z-0;
+    }
+
     .workflow-step-number {
-        @apply inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-100 text-brand-700 text-[10px] font-bold shrink-0;
+        @apply relative z-10 inline-flex items-center justify-center w-6 h-6 rounded-full bg-surface-base text-text-subtle text-[11px] font-bold shrink-0 shadow-sm border border-border-main;
+    }
+
+    .workflow-step-active .workflow-step-number {
+        @apply bg-brand-600 text-white border-brand-600 shadow-md shadow-brand-500/20;
     }
 
     .action-hint-btn {
-        @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium text-text-muted border border-border-subtle bg-surface-soft/50 hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200 transition-all cursor-pointer;
+        @apply inline-flex items-center gap-1.5 px-3 py-2 min-h-[40px] rounded-lg text-[11px] font-semibold text-text-subtle border border-border-main bg-surface-base shadow-sm hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200 hover:shadow-md active:scale-95 transition-all cursor-pointer;
+    }
+
+    .action-hint-btn svg {
+        @apply text-brand-500 w-3.5 h-3.5;
+    }
+
+    .task-bar-sticky {
+        @apply sticky top-0 z-50 bg-surface-base/90 backdrop-blur-xl border-b border-border-subtle py-3 px-5 sm:px-8 pb-4 mb-8 -mx-4 sm:-mx-8 shadow-[0_4px_24px_-12px_rgba(0, 0, 0, 0.05)];
+    }
+
+    .task-bar {
+        @apply flex items-center justify-between;
     }
 
     .validation-msg {
-        @apply text-[11px] font-medium mt-1 flex items-center gap-1;
+        @apply text-[11px] font-medium mt-1.5 flex items-center gap-1;
+        animation: fadeIn 0.25s ease-out;
     }
 
     .validation-msg.error {
@@ -175,6 +200,20 @@
 
     .badge {
         @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border;
+    }
+
+    /* Conversation workspace card focus state */
+    .workspace-card {
+        @apply bg-surface-base border border-border-main rounded-2xl p-5 sm:p-6 shadow-sm ring-1 ring-black/[0.02] transition-shadow duration-200;
+    }
+
+    .workspace-card:focus-within {
+        @apply shadow-md ring-brand-500/10 border-brand-400/30;
+    }
+
+    /* Section card — consistent padding for mobile/desktop */
+    .section-card {
+        @apply bg-surface-soft/20 rounded-2xl p-5 sm:p-6 border border-border-subtle/50;
     }
 }
 
@@ -212,6 +251,16 @@
             max-height: 100px;
         }
     }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
 }
 
 /* Custom Scrollbar */
@@ -225,4 +274,29 @@
 
 ::-webkit-scrollbar-thumb {
     @apply bg-border-main rounded-full hover:bg-text-muted transition-colors;
+}
+
+/* ─── Mobile Responsive Overrides ─── */
+@media (max-width: 639px) {
+    .task-bar-sticky {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .section-card,
+    .workspace-card {
+        padding: 18px;
+    }
+
+    .action-hint-btn {
+        flex: 1 1 calc(50% - 6px);
+        justify-content: center;
+        min-height: 40px;
+    }
+}
+
+@media (max-width: 400px) {
+    .action-hint-btn {
+        flex: 1 1 100%;
+    }
 }

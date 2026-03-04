@@ -126,4 +126,49 @@ async function getAllLeads() {
     return res.rows.map(mapRow);
 }
 
-module.exports = { appendLead, getAllLeads };
+/**
+ * Update an existing lead by ID.
+ */
+async function updateLead(id, data) {
+    await initDb();
+
+    const fields = [];
+    const values = [];
+    let idx = 1;
+
+    // Dynamically build the SET clause based on provided data
+    for (const [key, value] of Object.entries(data)) {
+        if (key === 'id' || key === 'createdAt') continue; // Don't update these
+
+        // Map camelCase keys to potential DB column requirements if needed.
+        // In our table definition, columns match exactly except they are case-insensitive.
+        fields.push(`"${key.toLowerCase()}" = $${idx}`);
+        values.push(value);
+        idx++;
+    }
+
+    if (fields.length === 0) return null; // Nothing to update
+
+    values.push(id);
+    const query = `
+        UPDATE leads 
+        SET ${fields.join(', ')} 
+        WHERE id = $${idx}
+        RETURNING *;
+    `;
+
+    const res = await db.query(query, values);
+    return res.rows.length ? mapRow(res.rows[0]) : null;
+}
+
+/**
+ * Delete a lead by ID.
+ */
+async function deleteLead(id) {
+    await initDb();
+    const query = `DELETE FROM leads WHERE id = $1 RETURNING id;`;
+    const res = await db.query(query, [id]);
+    return res.rowCount > 0;
+}
+
+module.exports = { appendLead, getAllLeads, updateLead, deleteLead };
