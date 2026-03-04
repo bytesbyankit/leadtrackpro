@@ -178,7 +178,7 @@
     }
 
     .task-bar-sticky {
-        @apply sticky top-0 z-50 bg-surface-base/90 backdrop-blur-xl border-b border-border-subtle py-3 px-5 sm:px-8 pb-4 mb-8 -mx-4 sm:-mx-8 shadow-[0_4px_24px_-12px_rgba(0, 0, 0, 0.05)];
+        @apply sticky top-0 z-50 bg-surface-base/90 backdrop-blur-xl border-b border-border-subtle py-3 px-5 sm:px-8 pb-4 mb-8 -mx-4 sm:-mx-8 shadow-[0_4px_24px_-12px_rgba(0,0,0,0.05)];
     }
 
     .task-bar {
