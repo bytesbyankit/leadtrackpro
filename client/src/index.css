@@ -108,6 +108,10 @@
         @apply inline-flex items-center justify-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg transition-all active:scale-[0.98] shadow-md shadow-brand-500/10;
     }
 
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 px-4 py-2 bg-surface-soft border border-border-main text-text-subtle font-medium rounded-lg transition-all hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200 active:scale-[0.98];
+    }
+
     .card {
         @apply bg-surface-soft/50 border border-border-main rounded-xl backdrop-blur-sm shadow-soft;
     }
@@ -116,8 +120,57 @@
         @apply w-full bg-surface-base border border-border-main rounded-lg px-3 py-2 text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all;
     }
 
+    .input-field-borderless {
+        @apply w-full bg-transparent border border-transparent rounded-lg px-3 py-2.5 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:bg-surface-base hover:border-border-main hover:bg-surface-base/50 transition-all;
+    }
+
+    .input-field-borderless.validation-error {
+        @apply border-error-500/50 bg-error-500/5 focus:ring-error-500/20 focus:border-error-500;
+    }
+
+    .input-field-borderless.validation-success {
+        @apply border-success-500/30;
+    }
+
     .label-text {
         @apply block text-xs font-semibold text-text-subtle uppercase tracking-wider mb-1.5;
+    }
+
+    .label-required::after {
+        content: ' *';
+        @apply text-error-500 font-bold;
+    }
+
+    .section-header {
+        @apply text-[13px] font-bold text-text-main tracking-wide uppercase pl-3 border-l-[3px] border-brand-500;
+    }
+
+    .section-description {
+        @apply text-[11px] text-text-muted font-medium mt-0.5 pl-3;
+    }
+
+    .hint-text {
+        @apply text-[10px] text-text-muted font-medium mt-1 leading-tight;
+    }
+
+    .workflow-step-number {
+        @apply inline-flex items-center justify-center w-5 h-5 rounded-full bg-brand-100 text-brand-700 text-[10px] font-bold shrink-0;
+    }
+
+    .action-hint-btn {
+        @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium text-text-muted border border-border-subtle bg-surface-soft/50 hover:bg-brand-50 hover:text-brand-600 hover:border-brand-200 transition-all cursor-pointer;
+    }
+
+    .validation-msg {
+        @apply text-[11px] font-medium mt-1 flex items-center gap-1;
+    }
+
+    .validation-msg.error {
+        @apply text-error-500;
+    }
+
+    .validation-msg.success {
+        @apply text-success-500;
     }
 
     .badge {
@@ -139,6 +192,24 @@
         to {
             opacity: 1;
             transform: translateY(0);
+        }
+    }
+
+    .animate-slide-in {
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-8px);
+            max-height: 0;
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: 100px;
         }
     }
 }
