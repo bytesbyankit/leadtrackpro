@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../lib/api';
 import {
     Send, User, Building2, Phone, Mail, MapPin,
     Briefcase, Globe, BarChart2, DollarSign,
@@ -46,7 +46,7 @@ function LeadForm({ onShowToast }) {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axios.post('/api/leads', formData);
+            const response = await api.post('/api/leads', formData);
             if (response.data.success) {
                 onShowToast('Lead logged successfully!', 'success');
                 setFormData(INITIAL_STATE);

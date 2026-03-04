@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import LoginPage from './components/LoginPage';
 import TabNavigation from './components/TabNavigation';
 import LeadForm from './components/LeadForm';
 import LeadTable from './components/LeadTable';
 import Dashboard from './components/Dashboard';
 import Toast from './components/Toast';
-import { Layout, ShieldCheck } from 'lucide-react';
+import { ShieldCheck, LogOut, Loader2 } from 'lucide-react';
 
-function App() {
+function AppContent() {
+    const { isAuthenticated, user, logout, loading } = useAuth();
+
     // Sync tab state with URL query parameter
     const [activeTab, setActiveTab] = useState(() => {
         const params = new URLSearchParams(window.location.search);
@@ -25,6 +29,20 @@ function App() {
         setTimeout(() => setToast(null), 3000);
     };
 
+    // Show loading spinner while checking auth
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-surface-base flex items-center justify-center">
+                <Loader2 size={32} className="animate-spin text-brand-500" />
+            </div>
+        );
+    }
+
+    // Show login page if not authenticated
+    if (!isAuthenticated) {
+        return <LoginPage />;
+    }
+
     return (
         <div className="min-h-screen bg-surface-base flex flex-col transition-colors duration-300">
             {/* Persistent Navigation Bar */}
@@ -40,7 +58,22 @@ function App() {
                             </span>
                         </div>
 
-                        <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+                        <div className="flex items-center gap-4">
+                            <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+
+                            <div className="hidden md:flex items-center gap-3 pl-4 border-l border-border-main">
+                                <span className="text-xs font-medium text-text-muted truncate max-w-[120px]">
+                                    {user?.email}
+                                </span>
+                                <button
+                                    onClick={logout}
+                                    title="Sign out"
+                                    className="p-2 text-text-muted hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                                >
+                                    <LogOut size={16} strokeWidth={2.5} />
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -67,10 +100,18 @@ function App() {
             </main>
 
             <footer className="border-t border-border-subtle bg-surface-base py-8">
-                <div className="max-w-7xl mx-auto px-4 text-center">
+                <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-text-muted text-sm font-medium">
                         &copy; 2026 LeadTrack CRM. Enterprise Edition v4.0
                     </p>
+                    {/* Mobile logout */}
+                    <button
+                        onClick={logout}
+                        className="md:hidden inline-flex items-center gap-2 text-xs font-medium text-text-muted hover:text-red-500 transition-colors"
+                    >
+                        <LogOut size={14} />
+                        Sign out ({user?.email})
+                    </button>
                 </div>
             </footer>
 
@@ -82,6 +123,14 @@ function App() {
                 />
             )}
         </div>
+    );
+}
+
+function App() {
+    return (
+        <AuthProvider>
+            <AppContent />
+        </AuthProvider>
     );
 }
 

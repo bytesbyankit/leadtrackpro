@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../lib/api';
 import {
     Search, Loader2, Building2, Phone,
     ChevronRight, MoreVertical, ExternalLink,
@@ -21,7 +21,7 @@ function LeadTable() {
 
     const fetchLeads = async () => {
         try {
-            const response = await axios.get('/api/leads');
+            const response = await api.get('/api/leads');
             setLeads(response.data.leads || []);
         } catch (error) {
             console.error('Fetch error', error);

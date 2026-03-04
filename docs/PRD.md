@@ -267,7 +267,23 @@ Support up to 10,000 leads.
 
 ### Security
 
-API must validate requests.
+*   API requests are authenticated via an `X-API-Key` header checked against a server-side `API_KEY` environment variable. If `API_KEY` is not set, auth is bypassed for development convenience.
+
+*   HTTP security headers (Content-Security-Policy, Strict-Transport-Security, X-Content-Type-Options, X-Frame-Options, X-XSS-Protection) are enforced via Helmet.
+
+*   CORS is restricted to an explicit allowlist of origins defined in `ALLOWED_ORIGINS` (production) or `localhost:5173` / `localhost:4000` (development).
+
+*   Rate limiting is applied globally (100 requests / 15 min per IP) and more strictly on lead creation (20 requests / 15 min per IP).
+
+*   All string inputs in request bodies are sanitized to strip XSS / HTML payloads before validation.
+
+*   Request body size is capped at 16 KB.
+
+*   HTTP parameter pollution is prevented via the hpp middleware.
+
+*   Production error responses never expose stack traces or internal details.
+
+*   Docker containers run as a non-root user.
 
 Tech Stack Recommendation
 =========================

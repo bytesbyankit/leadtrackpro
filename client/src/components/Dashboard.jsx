@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../lib/api';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid,
     Tooltip, ResponsiveContainer, AreaChart, Area,
@@ -24,7 +24,7 @@ function Dashboard() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await axios.get('/api/leads');
+                const response = await api.get('/api/leads');
                 const leads = response.data.leads || [];
                 const won = leads.filter(l => l.dealStage === 'Won').length;
                 const productive = leads.filter(l => ['Interested', 'Proposal Sent', 'Negotiation'].includes(l.dealStage)).length;

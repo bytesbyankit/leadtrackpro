@@ -10,23 +10,27 @@ RUN npm run build
 
 # Stage 2: Setup the backend and serve the application
 FROM node:18-alpine
+
+# Create non-root user
+RUN addgroup -S app && adduser -S app -G app
+
 WORKDIR /app
 
 # Install backend dependencies
 COPY server/package*.json ./server/
-RUN cd server && npm install
+RUN cd server && npm install --omit=dev
 
 # Copy backend source
 COPY server/ ./server/
 
-# Copy built frontend to backend static folder (optional, if server is serving SPA)
-# RUN mkdir -p server/public
-# COPY --from=frontend-builder /app/client/dist ./server/public
-
 # Setup data directory for Excel persistence
-RUN mkdir -p server/data
+RUN mkdir -p server/data && chown -R app:app /app
+
+# Switch to non-root user
+USER app
+
+ENV NODE_ENV=production
 
 EXPOSE 4000
-# EXPOSE 5173
 
 CMD ["node", "server/server.js"]
