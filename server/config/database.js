@@ -1,10 +1,10 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.STORAGE_DATABASE_URL;
 
 if (!connectionString && process.env.NODE_ENV === 'production') {
-    console.error('❌ CRITICAL: DATABASE_URL or POSTGRES_URL is not defined in environment variables.');
+    console.error('❌ CRITICAL: DATABASE_URL or POSTGRES_URL or STORAGE_DATABASE_URL is not defined in environment variables.');
 }
 
 const pool = new Pool({

@@ -8,7 +8,7 @@ let isInitialized = false;
 async function initDb() {
     if (isInitialized) return;
 
-    if (!process.env.DATABASE_URL && !process.env.POSTGRES_URL) {
+    if (!process.env.DATABASE_URL && !process.env.POSTGRES_URL && !process.env.STORAGE_DATABASE_URL) {
         console.warn('⚠️ Skipping DB init: No connection string found.');
         return;
     }
